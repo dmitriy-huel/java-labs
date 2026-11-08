@@ -1,162 +1,117 @@
 package org.example;
 
-abstract class Building {
-    private String address;
-    private int floors;
-    private double area;
+interface Transportable {
+    void transport();
+    int getCapacity();
+}
 
-    public Building(String address, int floors, double area) {
-        setAddress(address);
-        setFloors(floors);
-        setArea(area);
+interface Maintainable {
+    void maintain();
+    String getServiceDate();
+}
+
+class Truck implements Transportable, Maintainable {
+    private String brand;
+    private int capacity;
+    private String serviceDate;
+
+    public Truck(String brand, int capacity, String serviceDate) {
+        this.brand = brand;
+        this.capacity = capacity;
+        this.serviceDate = serviceDate;
     }
 
-    public String getAddress() { return address; }
-    public int getFloors() { return floors; }
-    public double getArea() { return area; }
+    public String getBrand() { return brand; }
+    public String getServiceDate() { return serviceDate; }
 
-    public void setAddress(String address) {
-        if (address == null || address.isEmpty()) {
-            System.out.println("адрес не может быть пустым");
-            return;
-        }
-        this.address = address;
+    @Override
+    public void transport() {
+        System.out.println("Грузовик " + brand + " перевозит грузы по дороге");
     }
 
-    public void setFloors(int floors) {
-        if (floors <= 0) {
-            System.out.println("этажей должно быть больше 0");
-            return;
-        }
-        this.floors = floors;
+    @Override
+    public int getCapacity() {
+        return capacity;
     }
 
-    public void setArea(double area) {
-        if (area <= 0) {
-            System.out.println("площадь должна быть больше 0");
-            return;
-        }
-        this.area = area;
-    }
-
-    public abstract String getPurpose();
-    public abstract int calculateCapacity();
-
-    public void displayInfo() {
-        System.out.println("Адрес: " + getAddress() +
-                ", Этажей: " + getFloors() +
-                ", Площадь: " + getArea() +
-                ", Назначение: " + getPurpose() +
-                ", Вместимость: " + calculateCapacity() + " чел.");
+    @Override
+    public void maintain() {
+        System.out.println("Грузовик " + brand + " проходит техобслуживание");
     }
 
     @Override
     public String toString() {
-        return "Building{address='" + address + "', floors=" + floors + ", area=" + area + "}";
+        return "Truck{brand='" + brand + "', capacity=" + capacity +
+                ", serviceDate='" + serviceDate + "'}";
     }
 }
 
-class ResidentialBuilding extends Building {
-    private int apartments;
+class Ship implements Transportable, Maintainable {
+    private String brand;
+    private int capacity;
+    private double tonnage;
 
-    public ResidentialBuilding(String address, int floors, double area, int apartments) {
-        super(address, floors, area);
-        setApartments(apartments);
+    public Ship(String brand, int capacity, double tonnage) {
+        this.brand = brand;
+        this.capacity = capacity;
+        this.tonnage = tonnage;
     }
 
-    public int getApartments() { return apartments; }
+    public String getBrand() { return brand; }
+    public double getTonnage() { return tonnage; }
 
-    public void setApartments(int apartments) {
-        if (apartments <= 0) {
-            System.out.println("квартир должно быть больше 0");
-            return;
-        }
-        this.apartments = apartments;
+    @Override
+    public void transport() {
+        System.out.println("Корабль " + brand + " перевозит грузы по воде");
     }
 
     @Override
-    public String getPurpose() {
-        return "Жилой дом";
+    public int getCapacity() {
+        return capacity;
     }
 
     @Override
-    public int calculateCapacity() {
-        return getApartments() * 3;
+    public void maintain() {
+        System.out.println("Корабль " + brand + " проходит докование");
     }
 
     @Override
-    public void displayInfo() {
-        super.displayInfo();
-        System.out.println("Квартир: " + getApartments());
-    }
-
-    @Override
-    public String toString() {
-        return "ResidentialBuilding{address='" + getAddress() + "', floors=" + getFloors() +
-                ", area=" + getArea() + ", apartments=" + apartments + "}";
-    }
-}
-
-class OfficeBuilding extends Building {
-    private int companies;
-
-    public OfficeBuilding(String address, int floors, double area, int companies) {
-        super(address, floors, area);
-        setCompanies(companies);
-    }
-
-    public int getCompanies() { return companies; }
-
-    public void setCompanies(int companies) {
-        if (companies <= 0) {
-            System.out.println("компаний должно быть больше 0");
-            return;
-        }
-        this.companies = companies;
-    }
-
-    @Override
-    public String getPurpose() {
-        return "Офисное здание";
-    }
-
-    @Override
-    public int calculateCapacity() {
-        return getCompanies() * 10;
-    }
-
-    @Override
-    public void displayInfo() {
-        super.displayInfo();
-        System.out.println("Компаний: " + getCompanies());
+    public String getServiceDate() {
+        return "Последнее ТО: 2023-10-15";
     }
 
     @Override
     public String toString() {
-        return "OfficeBuilding{address='" + getAddress() + "', floors=" + getFloors() +
-                ", area=" + getArea() + ", companies=" + companies + "}";
+        return "Ship{brand='" + brand + "', capacity=" + capacity +
+                ", tonnage=" + tonnage + "}";
     }
 }
 
 public class App {
     public static void main(String[] args) {
-        Building[] buildings = {
-                new ResidentialBuilding("ул. Ленина, 10", 5, 1200.5, 40),
-                new ResidentialBuilding("ул. Пушкина, 25", 9, 3000.0, 120),
-                new ResidentialBuilding("пр. Мира, 7", 3, 800.0, 24),
-                new OfficeBuilding("ул. Гагарина, 1", 12, 5000.0, 15),
-                new OfficeBuilding("ул. Советская, 5", 7, 2500.0, 8)
+        Transportable[] transports = {
+                new Truck("Volvo", 20, "2024-01-10"),
+                new Truck("Scania", 25, "2024-02-15"),
+                new Truck("MAN", 18, "2023-12-01"),
+                new Ship("Evergreen", 1500, 5000.5),
+                new Ship("Maersk", 2000, 7500.0)
         };
 
-        for (int i = 0; i < buildings.length; i++) {
-            buildings[i].displayInfo();
+        for (int i = 0; i < transports.length; i++) {
+            transports[i].transport();
+            System.out.println("Грузоподъемность: " + transports[i].getCapacity() + " тонн");
             System.out.println();
         }
 
         System.out.println();
 
-        for (int i = 0; i < buildings.length; i++) {
-            System.out.println(buildings[i]);
+        for (int i = 0; i < transports.length; i++) {
+            if (transports[i] instanceof Maintainable) {
+                Maintainable m = (Maintainable) transports[i];
+                m.maintain();
+                System.out.println("Дата обслуживания: " + m.getServiceDate());
+                System.out.println();
+            }
         }
     }
 }
