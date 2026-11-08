@@ -1,161 +1,198 @@
 package org.example;
 
-class InvalidMusicianDataException extends Exception {
-    public InvalidMusicianDataException(String message) {
-        super(message);
-    }
-}
-
-class MusicianNotFoundException extends Exception {
-    public MusicianNotFoundException(String message) {
-        super(message);
-    }
-}
-
-class AlbumException extends Exception {
-    public AlbumException(String message) {
-        super(message);
-    }
-}
-
-class Musician {
-    private String name;
-    private String instrument;
-    private String genre;
-    private int albums;
-    private double rating;
-
-    public Musician(String name, String instrument, String genre, int albums, double rating) throws InvalidMusicianDataException {
-        if (name == null || name.isEmpty()) {
-            throw new InvalidMusicianDataException("Имя музыканта не может быть пустым");
-        }
-        if (albums < 0) {
-            throw new InvalidMusicianDataException("Количество альбомов не может быть отрицательным");
-        }
-        if (rating < 1 || rating > 10) {
-            throw new InvalidMusicianDataException("Рейтинг должен быть от 1 до 10");
-        }
-        this.name = name;
-        this.instrument = instrument;
-        this.genre = genre;
-        this.albums = albums;
-        this.rating = rating;
-    }
-
-    public String getName() { return name; }
-
-    public void releaseAlbum(String title) throws AlbumException {
-        if (title == null || title.isEmpty()) {
-            throw new AlbumException("Название альбома не может быть пустым");
-        }
-        if (this.albums >= 20) {
-            throw new AlbumException("У музыканта уже максимум альбомов");
-        }
-        this.albums++;
-        System.out.println("Музыкант " + name + " выпустил альбом: " + title);
-    }
-
-    public void updateRating(double newRating) throws InvalidMusicianDataException {
-        if (newRating < 1 || newRating > 10) {
-            throw new InvalidMusicianDataException("Новый рейтинг должен быть от 1 до 10");
-        }
-        this.rating = newRating;
-        System.out.println("Рейтинг музыканта " + name + " обновлен до " + newRating);
-    }
-
-    @Override
-    public String toString() {
-        return "Музыкант: " + name + ", Инструмент: " + instrument +
-                ", Жанр: " + genre + ", Альбомов: " + albums + ", Рейтинг: " + rating;
-    }
-}
-
-class MusicLabel {
-    private Musician[] musicians;
-    private int count;
-
-    public MusicLabel(int size) {
-        musicians = new Musician[size];
-        count = 0;
-    }
-
-    public void addMusician(Musician m) {
-        if (count < musicians.length) {
-            musicians[count] = m;
-            count++;
-        }
-    }
-
-    public Musician findMusician(String name) throws MusicianNotFoundException {
-        for (int i = 0; i < count; i++) {
-            if (musicians[i].getName().equalsIgnoreCase(name)) {
-                return musicians[i];
-            }
-        }
-        throw new MusicianNotFoundException("Музыкант с именем " + name + " не найден");
-    }
-
-    public void printAll() {
-        for (int i = 0; i < count; i++) {
-            System.out.println(musicians[i]);
-        }
-    }
-}
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.InputMismatchException;
+import java.util.Random;
+import java.util.Scanner;
 
 public class App {
+
     public static void main(String[] args) {
-        MusicLabel label = new MusicLabel(5);
+        System.out.println("Задание 1");
+        task1();
 
-        try {
-            Musician m1 = new Musician("Иван", "Гитара", "Рок", 3, 8.5);
-            Musician m2 = new Musician("Мария", "Пианино", "Классика", 5, 9.2);
-            Musician m3 = new Musician("Алексей", "Барабаны", "Джаз", 2, 7.8);
+        System.out.println("\nЗадание 2");
+        task2();
 
-            label.addMusician(m1);
-            label.addMusician(m2);
-            label.addMusician(m3);
+        System.out.println("\nЗадание 3");
+        task3();
 
-            System.out.println("Список музыкантов:");
-            label.printAll();
-            System.out.println();
+        System.out.println("\nЗадание 4");
+        task4();
 
-        } catch (InvalidMusicianDataException e) {
-            System.out.println("Ошибка создания музыканта: " + e.getMessage());
+        System.out.println("\nЗадание 5");
+        task5();
+    }
+
+    public static void task1() {
+        File file = new File("song.txt");
+        try (PrintWriter writer = new PrintWriter(file)) {
+            writer.println("Название: Bohemian Rhapsody");
+            writer.println("Исполнитель: Queen");
+            writer.println("Альбом: A Night at the Opera");
+            writer.println("Год выпуска: 1975");
+        } catch (IOException e) {
+            System.out.println("Ошибка записи: " + e.getMessage());
         }
 
-        System.out.println("Выпуск альбомов:");
-        try {
-            Musician m1 = label.findMusician("Иван");
-            m1.releaseAlbum("Новый альбом");
+        System.out.println("Данные о файле:");
+        System.out.println("Имя: " + file.getName());
+        System.out.println("Размер: " + file.length() + " байт");
+        System.out.println("Существует: " + file.exists());
+        System.out.println("Путь: " + file.getAbsolutePath());
 
-            Musician m2 = label.findMusician("Мария");
-            m2.releaseAlbum("Зимняя классика");
-
-            Musician m3 = label.findMusician("Петр");
-            m3.releaseAlbum("Попытка");
-
-        } catch (MusicianNotFoundException e) {
-            System.out.println("Ошибка поиска: " + e.getMessage());
-        } catch (AlbumException e) {
-            System.out.println("Ошибка выпуска альбома: " + e.getMessage());
-        } catch (Exception e) {
-            System.out.println("Неизвестная ошибка: " + e.getMessage());
-        } finally {
-            System.out.println("Блок finally выполнен");
+        System.out.println("Содержимое файла:");
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (IOException e) {
+            System.out.println("Ошибка чтения: " + e.getMessage());
         }
-        System.out.println();
+    }
 
-        System.out.println("Обновление рейтинга:");
-        try {
-            Musician m3 = label.findMusician("Алексей");
-            m3.updateRating(9.5);
+    public static void task2() {
+        File file = new File("f.txt");
+        Scanner scanner = new Scanner(System.in);
 
-            m3.updateRating(15.0);
-
-        } catch (MusicianNotFoundException e) {
-            System.out.println("Ошибка поиска: " + e.getMessage());
-        } catch (InvalidMusicianDataException e) {
-            System.out.println("Ошибка обновления рейтинга: " + e.getMessage());
+        try (PrintWriter writer = new PrintWriter(file)) {
+            System.out.println("Введите 10 целых чисел:");
+            for (int i = 0; i < 10; i++) {
+                if (scanner.hasNextInt()) {
+                    writer.println(scanner.nextInt());
+                } else {
+                    System.out.println("Ошибка: введено не число.");
+                    return;
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Ошибка записи: " + e.getMessage());
+            return;
         }
+
+        System.out.println("Считанные числа:");
+        int powerOfTwoCount = 0;
+        try (Scanner fileScanner = new Scanner(file)) {
+            while (fileScanner.hasNextInt()) {
+                int num = fileScanner.nextInt();
+                System.out.print(num + " ");
+                if (num > 0 && (num & (num - 1)) == 0) {
+                    powerOfTwoCount++;
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Ошибка чтения: " + e.getMessage());
+        }
+        System.out.println("\nКоличество чисел, являющихся степенями двойки: " + powerOfTwoCount);
+    }
+
+    public static void task3() {
+        File fileF = new File("f_random.txt");
+        File fileG = new File("g.txt");
+        File fileH = new File("h.txt");
+
+        Random random = new Random();
+
+        try (PrintWriter writerF = new PrintWriter(fileF)) {
+            for (int i = 0; i < 10; i++) {
+                writerF.println(random.nextInt(200) - 100);
+            }
+        } catch (IOException e) {
+            System.out.println("Ошибка записи в файл f: " + e.getMessage());
+            return;
+        }
+
+        try (Scanner scannerF = new Scanner(fileF);
+             PrintWriter writerG = new PrintWriter(fileG);
+             PrintWriter writerH = new PrintWriter(fileH)) {
+
+            while (scannerF.hasNextInt()) {
+                int num = scannerF.nextInt();
+                int temp = Math.abs(num);
+                int sum = 0;
+                while (temp > 0) {
+                    sum += temp % 10;
+                    temp /= 10;
+                }
+
+                if (sum % 2 == 0) {
+                    writerG.println(num);
+                } else {
+                    writerH.println(num);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Ошибка обработки файлов: " + e.getMessage());
+        }
+        System.out.println("Файлы g.txt и h.txt успешно созданы.");
+    }
+
+    public static void task4() {
+        File file = new File("angles.txt");
+        Scanner scanner = new Scanner(System.in);
+
+        try (PrintWriter writer = new PrintWriter(file)) {
+            System.out.println("Введите 10 значений углов в градусах:");
+            for (int i = 0; i < 10; i++) {
+                if (scanner.hasNextDouble()) {
+                    writer.println(scanner.nextDouble());
+                } else {
+                    System.out.println("Ошибка: введено не число.");
+                    return;
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Ошибка записи: " + e.getMessage());
+            return;
+        }
+
+        double sum = 0;
+        int count = 0;
+        try (Scanner fileScanner = new Scanner(file)) {
+            while (fileScanner.hasNextDouble()) {
+                sum += fileScanner.nextDouble();
+                count++;
+            }
+        } catch (IOException e) {
+            System.out.println("Ошибка чтения: " + e.getMessage());
+        }
+
+        if (count > 0) {
+            System.out.println("Средний угол: " + (sum / count));
+        } else {
+            System.out.println("Нет данных для подсчета.");
+        }
+    }
+
+    public static void task5() {
+        File file = new File("f_integers.txt");
+        Random random = new Random();
+
+        try (PrintWriter writer = new PrintWriter(file)) {
+            for (int i = 0; i < 10; i++) {
+                writer.println(random.nextInt(200) - 100);
+            }
+        } catch (IOException e) {
+            System.out.println("Ошибка записи: " + e.getMessage());
+            return;
+        }
+
+        int negativeCount = 0;
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextInt()) {
+                if (scanner.nextInt() < 0) {
+                    negativeCount++;
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Ошибка чтения: " + e.getMessage());
+        }
+        System.out.println("Количество чисел, меньших 0: " + negativeCount);
     }
 }
