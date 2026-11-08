@@ -1,92 +1,98 @@
+import java.util.Arrays;
 import java.util.Scanner;
 
-public class Main{
+public class Main {
+
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int choice;
+        Scanner sc = new Scanner(System.in);
 
-        do {
-            choice = scanner.nextInt();
+        System.out.print("Выберите задание (1 или 2) ");
 
-            switch (choice) {
-                case 1:
-                    task1(scanner);
-                    break;
+        int choice = sc.nextInt();
 
-                case 2:
-                    task2(scanner);
-                    break;
-
-                case 3:
-                    task3(scanner);
-                    break;
-
-                case 0:
-                    System.out.println("Программа завершена. До свидания!");
-                    break;
-
-                default:
-                    System.out.println("Ошибка: неверный выбор! Введите 1, 2, 3 или 0.");
-            }
-        } while (choice != 0);
-
-        scanner.close();
-    }
-
-    public static void task1(Scanner scanner) {
-        System.out.print("Введите количество метров: ");
-        double meters = scanner.nextDouble();
-        double millimeters = meters * 1000;
-        System.out.printf("%.2f м = %.2f мм\n", meters, millimeters);
-    }
-
-    public static void task2(Scanner scanner) {
-        System.out.print("Введите три целых числа через пробел: ");
-        int a = scanner.nextInt();
-        int b = scanner.nextInt();
-        int c = scanner.nextInt();
-
-        int count = 0;
-
-        if (a < 0) count++;
-      else  if (b < 0) count++;
-       else if (c < 0) count++;
-
-        System.out.println("Количество отрицательных чисел: " + count);
-    }
-
-    public static void task3(Scanner scanner) {
-        System.out.print("Введите целое число: ");
-        int n = scanner.nextInt();
-
-        if (n < 2) {
-            System.out.println("Число " + n + " не является простым (меньше 2)");
-            return;
-        }
-
-        boolean isPrime = true;
-//        for (int i = 2; i <= Math.sqrt(n); i++) {
-//            if (n % i == 0) {
-//                isPrime = false;
-//                break;
-//            }
-//        }
-
-        int i = 2;
-        while(i <= Math.sqrt(n)){
-            if (n % i == 0){
-                isPrime = false;
+        switch (choice) {
+            case 1:
+                task1(sc);
                 break;
-            }
-            i++;
+            case 2:
+                task2(sc);
+                break;
+            default:
+                System.out.println("Ошибка введите 1 или 2");
         }
 
-        if (isPrime) {
-            System.out.println("Число " + n + " — простое");
-            System.out.println("Оно делится только на 1 и на само себя");
-        } else {
-            System.out.println("Число " + n + " — не является простым");
-            System.out.println("У него есть делители, кроме 1 и самого числа");
+        sc.close();
+    }
+
+    static void task1(Scanner sc) {
+
+        System.out.print("Введите размер массива ");
+        int n = sc.nextInt();
+
+        int[] arr = new int[n];
+
+        System.out.println("Введите элементы массива");
+        for (int i = 0; i < n; i++) {
+            arr[i] = sc.nextInt();
         }
+
+        System.out.println("Исходный массив " + Arrays.toString(arr));
+
+        if (n > 0) {
+            int first = arr[0];
+            for (int i = 0; i < n - 1; i++) {
+                arr[i] = arr[i + 1];
+            }
+            arr[n - 1] = first;
+        }
+
+        System.out.println("Массив после сдвига влево " + Arrays.toString(arr));
+    }
+
+    static void task2(Scanner sc) {
+
+        System.out.print("Введите количество строк ");
+        int rows = sc.nextInt();
+        System.out.print("Введите количество столбцов ");
+        int cols = sc.nextInt();
+
+        int[][] matrix = new int[rows][cols];
+
+        System.out.println("Введите элементы матрицы");
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                matrix[i][j] = sc.nextInt();
+            }
+        }
+
+        System.out.println("Исходная матрица");
+        for (int i = 0; i < matrix.length; i++) {
+            System.out.println(Arrays.toString(matrix[i]));
+        }
+
+        int evenCount = 0, oddCount = 0;
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                if (matrix[i][j] % 2 == 0) evenCount++;
+                else oddCount++;
+            }
+        }
+
+        int[] evenArr = new int[evenCount];
+        int[] oddArr  = new int[oddCount];
+        int e = 0, o = 0;
+        int sum = 0;
+
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                if (i >= j) {
+                    sum += matrix[i][j];
+                }
+            }
+        }
+        System.out.println("Сумма элементов под гл " + sum);
+
+        System.out.println("Чётные элементы  " + Arrays.toString(evenArr));
+        System.out.println("Нечётные элементы " + Arrays.toString(oddArr));
     }
 }
