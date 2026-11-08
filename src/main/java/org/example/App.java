@@ -1,168 +1,162 @@
 package org.example;
 
-class Tool {
-    private String name;
-    private double power;
-    private double weight;
+abstract class Building {
+    private String address;
+    private int floors;
+    private double area;
 
-    public Tool(String name, double power, double weight) {
-        setName(name);
-        setPower(power);
-        setWeight(weight);
+    public Building(String address, int floors, double area) {
+        setAddress(address);
+        setFloors(floors);
+        setArea(area);
     }
 
-    public String getName() { return name; }
-    public double getPower() { return power; }
-    public double getWeight() { return weight; }
+    public String getAddress() { return address; }
+    public int getFloors() { return floors; }
+    public double getArea() { return area; }
 
-    public void setName(String name) {
-        if (name == null || name.isEmpty()) {
-            System.out.println("название не может быть пустым");
+    public void setAddress(String address) {
+        if (address == null || address.isEmpty()) {
+            System.out.println("адрес не может быть пустым");
             return;
         }
-        this.name = name;
+        this.address = address;
     }
 
-    public void setPower(double power) {
-        if (power <= 0) {
-            System.out.println("мощность должна быть больше 0");
+    public void setFloors(int floors) {
+        if (floors <= 0) {
+            System.out.println("этажей должно быть больше 0");
             return;
         }
-        this.power = power;
+        this.floors = floors;
     }
 
-    public void setWeight(double weight) {
-        if (weight <= 0) {
-            System.out.println("вес должен быть больше 0");
+    public void setArea(double area) {
+        if (area <= 0) {
+            System.out.println("площадь должна быть больше 0");
             return;
         }
-        this.weight = weight;
+        this.area = area;
     }
 
-    public void use() {
-        System.out.println("Инструмент используется");
-    }
+    public abstract String getPurpose();
+    public abstract int calculateCapacity();
 
     public void displayInfo() {
-        System.out.println("Название: " + getName() +
-                ", Мощность: " + getPower() +
-                ", Вес: " + getWeight());
+        System.out.println("Адрес: " + getAddress() +
+                ", Этажей: " + getFloors() +
+                ", Площадь: " + getArea() +
+                ", Назначение: " + getPurpose() +
+                ", Вместимость: " + calculateCapacity() + " чел.");
     }
 
     @Override
     public String toString() {
-        return "ыname='" + name + "', power=" + power + ", weight=" + weight + "}";
+        return "Building{address='" + address + "', floors=" + floors + ", area=" + area + "}";
     }
 }
 
-class Drill extends Tool {
-    private int speed;
+class ResidentialBuilding extends Building {
+    private int apartments;
 
-    public Drill(String name, double power, double weight, int speed) {
-        super(name, power, weight);
-        setSpeed(speed);
+    public ResidentialBuilding(String address, int floors, double area, int apartments) {
+        super(address, floors, area);
+        setApartments(apartments);
     }
 
-    public int getSpeed() { return speed; }
+    public int getApartments() { return apartments; }
 
-    public void setSpeed(int speed) {
-        if (speed <= 0) {
-            System.out.println("скорость должна быть больше 0");
+    public void setApartments(int apartments) {
+        if (apartments <= 0) {
+            System.out.println("квартир должно быть больше 0");
             return;
         }
-        this.speed = speed;
+        this.apartments = apartments;
     }
 
     @Override
-    public void use() {
-        System.out.println("Сверлит отверстия");
+    public String getPurpose() {
+        return "Жилой дом";
     }
 
-    public void changeDrillBit() {
-        System.out.println("Смена сверла выполнена");
+    @Override
+    public int calculateCapacity() {
+        return getApartments() * 3;
     }
 
     @Override
     public void displayInfo() {
         super.displayInfo();
-        System.out.println("Скорость: " + getSpeed());
+        System.out.println("Квартир: " + getApartments());
     }
 
     @Override
     public String toString() {
-        return "name='" + getName() + "', power=" + getPower() +
-                ", weight=" + getWeight() + ", speed=" + speed + "}";
+        return "ResidentialBuilding{address='" + getAddress() + "', floors=" + getFloors() +
+                ", area=" + getArea() + ", apartments=" + apartments + "}";
     }
 }
 
-class Saw extends Tool {
-    private double bladeLength;
+class OfficeBuilding extends Building {
+    private int companies;
 
-    public Saw(String name, double power, double weight, double bladeLength) {
-        super(name, power, weight);
-        setBladeLength(bladeLength);
+    public OfficeBuilding(String address, int floors, double area, int companies) {
+        super(address, floors, area);
+        setCompanies(companies);
     }
 
-    public double getBladeLength() { return bladeLength; }
+    public int getCompanies() { return companies; }
 
-    public void setBladeLength(double bladeLength) {
-        if (bladeLength <= 0) {
-            System.out.println("длина лезвия должна быть больше 0");
+    public void setCompanies(int companies) {
+        if (companies <= 0) {
+            System.out.println("компаний должно быть больше 0");
             return;
         }
-        this.bladeLength = bladeLength;
+        this.companies = companies;
     }
 
     @Override
-    public void use() {
-        System.out.println("Режет материалы");
+    public String getPurpose() {
+        return "Офисное здание";
     }
 
-    public void sharpenBlade() {
-        System.out.println("Лезвие заточено");
+    @Override
+    public int calculateCapacity() {
+        return getCompanies() * 10;
     }
 
     @Override
     public void displayInfo() {
         super.displayInfo();
-        System.out.println("Длина лезвия: " + getBladeLength());
+        System.out.println("Компаний: " + getCompanies());
     }
 
     @Override
     public String toString() {
-        return "Saw{name='" + getName() + "', power=" + getPower() +
-                ", weight=" + getWeight() + ", bladeLength=" + bladeLength + "}";
+        return "OfficeBuilding{address='" + getAddress() + "', floors=" + getFloors() +
+                ", area=" + getArea() + ", companies=" + companies + "}";
     }
 }
 
 public class App {
     public static void main(String[] args) {
-        Tool[] tools = {
-                new Drill("Bosch", 800, 2.5, 3000),
-                new Saw("Makita", 1200, 4.0, 25.0),
-                new Drill(" DeWalt", 950, 2.8, 2800),
-                new Saw("Hitachi", 1100, 3.5, 30.0),
-                new Drill("Metabo", 750, 2.2, 3200)
+        Building[] buildings = {
+                new ResidentialBuilding("ул. Ленина, 10", 5, 1200.5, 40),
+                new ResidentialBuilding("ул. Пушкина, 25", 9, 3000.0, 120),
+                new ResidentialBuilding("пр. Мира, 7", 3, 800.0, 24),
+                new OfficeBuilding("ул. Гагарина, 1", 12, 5000.0, 15),
+                new OfficeBuilding("ул. Советская, 5", 7, 2500.0, 8)
         };
 
-        for (int i = 0; i < tools.length; i++) {
-            tools[i].displayInfo();
-            tools[i].use();
+        for (int i = 0; i < buildings.length; i++) {
+            buildings[i].displayInfo();
             System.out.println();
-        }
-
-        for (int i = 0; i < tools.length; i++) {
-            if (tools[i] instanceof Drill) {
-                ((Drill) tools[i]).changeDrillBit();
-            } else if (tools[i] instanceof Saw) {
-                ((Saw) tools[i]).sharpenBlade();
-            }
         }
 
         System.out.println();
 
-        for (int i = 0; i < tools.length; i++) {
-            System.out.println(tools[i]);
+        for (int i = 0; i < buildings.length; i++) {
+            System.out.println(buildings[i]);
         }
     }
 }
