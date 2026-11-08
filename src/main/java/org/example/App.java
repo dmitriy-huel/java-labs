@@ -1,93 +1,95 @@
 package org.example;
 
-import java.util.Scanner;
+class Singer {
+    private String name;
+    private String genre;
+    private int albums;
+
+    private static int totalSingers = 0;
+    private static int totalAlbums = 0;
+
+    public Singer(String name, String genre, int albums) {
+        setName(name);
+        setGenre(genre);
+        setAlbums(albums);
+        totalSingers++;
+        totalAlbums += albums;
+    }
+
+    public String getName() { return name; }
+    public String getGenre() { return genre; }
+    public int getAlbums() { return albums; }
+
+    public void setName(String name) {
+        if (name == null || name.isEmpty()) {
+            System.out.println("имя не может быть пустым");
+            return;
+        }
+        this.name = name;
+    }
+
+    public void setGenre(String genre) {
+        if (genre == null || genre.isEmpty()) {
+            System.out.println("жанр не может быть пустым");
+            return;
+        }
+        this.genre = genre;
+    }
+
+    public void setAlbums(int albums) {
+        if (albums < 0) {
+            System.out.println("число альбомов не может быть отрицательным");
+            return;
+        }
+        this.albums = albums;
+    }
+
+    public static int getTotalSingers() { return totalSingers; }
+    public static int getTotalAlbums() { return totalAlbums; }
+
+    public static double getAverageAlbums() {
+        if (totalSingers == 0) return 0;
+        return (double) totalAlbums / totalSingers;
+    }
+
+    public void displayInfo() {
+        System.out.println("Имя: " + getName() +
+                ", Жанр: " + getGenre() +
+                ", Альбомов: " + getAlbums());
+    }
+
+    @Override
+    public String toString() {
+        return  name + " " + genre + " " + albums;
+    }
+}
 
 public class App {
-
-    static void task1() {
-        System.out.println("Задание 1");
-        Laptop laptop = new Laptop("Lenovo", 16, 512, 1500.0);
-
-        System.out.println("До скидки:");
-        laptop.displayInfo();
-
-        laptop.applyDiscount(10);
-
-        System.out.println("После скидки 10%:");
-        laptop.displayInfo();
-        System.out.println(laptop);
-
-
-    }
-
-    static void task2() {
-        System.out.println("Задание 2");
-        Train[] trains = {
-                new Train("Минск", 101, 180),
-                new Train("Москва", 202, 540),
-                new Train("Брест", 303, 240),
-                new Train("Гомель", 404, 120),
-                new Train("Витебск", 505, 360)
-        };
-
-        Train maxTime = trains[0];
-        Train minTime = trains[0];
-
-        for (int i = 1; i < trains.length; i++) {
-            if (trains[i].getTravelTime() > maxTime.getTravelTime()) maxTime = trains[i];
-            if (trains[i].getTravelTime() < minTime.getTravelTime()) minTime = trains[i];
-        }
-
-        System.out.println("Поезд с максимальным временем в пути: " +
-                maxTime.getDestination() + " (№" + maxTime.getTrainNumber() +
-                ", " + maxTime.getTravelTime() + " мин)");
-
-        System.out.println("Поезд с минимальным временем в пути: " +
-                minTime.getDestination() + " (№" + minTime.getTrainNumber() +
-                ", " + minTime.getTravelTime() + " мин)");
-        System.out.println();
-    }
-
-    static void task3() {
-        System.out.println("Задание 3");
-        Employee[] employees = {
-                new Employee("Алексей", Department.IT),
-                new Employee("Мария", Department.HR),
-                new Employee("Иван", Department.IT),
-                new Employee("Ольга", Department.FINANCE),
-                new Employee("Пётр", Department.MARKETING),
-                new Employee("Елена", Department.SALES)
-        };
-
-        System.out.println("Сотрудники отдела IT:");
-        for (int i = 0; i < employees.length; i++) {
-            if (employees[i].getDepartment() == Department.IT) {
-                System.out.println(employees[i].getName());
-            }
-        }
-        System.out.println();
-    }
-
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        Singer s1 = new Singer("Иван", "Рок", 5);
+        Singer s2 = new Singer("Мария", "Поп", 3);
+        Singer s3 = new Singer("Алексей", "Джаз", 7);
+        Singer s4 = new Singer("Ольга", "Классика", 2);
+        Singer s5 = new Singer("Пётр", "Рэп", 8);
 
-        System.out.println("Выберите задание:");
+        s1.displayInfo();
+        s2.displayInfo();
+        s3.displayInfo();
+        s4.displayInfo();
+        s5.displayInfo();
 
-        int choice = scanner.nextInt();
+        System.out.println();
 
-        switch (choice) {
-            case 1:
-                task1();
-                break;
-            case 2:
-                task2();
-                break;
-            case 3:
-                task3();
-                break;
-            default:
-                System.out.println("Неверный выбор");
-        }
-        scanner.close();
+        System.out.println("Всего певцов: " + Singer.getTotalSingers());
+        System.out.println("Всего альбомов: " + Singer.getTotalAlbums());
+        System.out.println("Среднее число альбомов: " + Singer.getAverageAlbums());
+
+        System.out.println();
+
+        System.out.println(s1);
+        System.out.println(s2);
+        System.out.println(s3);
+        System.out.println(s4);
+        System.out.println(s5);
     }
 }
