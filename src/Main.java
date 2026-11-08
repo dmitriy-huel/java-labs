@@ -1,98 +1,123 @@
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+class Employee {
+    private String fullname;
+    private double salary;
+
+    public Employee(String fullname, double salary) {
+        this.fullname = fullname;
+        this.salary = salary;
+    }
+
+    public String getFullname() {
+        return fullname;
+    }
+
+    public double getSalary() {
+        return salary;
+    }
+}
+
+class Report {
+    public static void generateReport(Employee[] employees) {
+        System.out.printf("%-15s | %15s%n", "Фамилия", "Зарплата");
+
+        for (int i = 0; i < employees.length; i++) {
+            Employee emp = employees[i];
+
+            String[] parts = emp.getFullname().split("\\s+");
+            String surname = parts[0];
+
+            if (surname.length() > 15) {
+                surname = surname.substring(0, 15);
+            }
+
+            System.out.printf("%-15s |%15.2f%n", surname, emp.getSalary());
+        }
+    }
+}
 
 public class Main {
 
+    public static void task1() {
+
+        String str1 = "Привет";
+        String str2 = "Мир";
+
+        String result = str1 + " " + str2;
+
+        System.out.println("Первая строка: " + str1);
+        System.out.println("Вторая строка: " + str2);
+        System.out.println("Результат: " + result);
+    }
+
+    public static void task2() {
+
+        String sentence = "Я иду домой и вижу там кота";
+
+        System.out.println("Исходное предложение: " + sentence);
+
+        String[] words = sentence.split("\\s+");
+        StringBuilder result = new StringBuilder();
+
+        for (int i = 0; i < words.length; i++) {
+            String word = words[i];
+            if (word.length() >= 3) {
+                result.append(word).append(" ");
+            }
+        }
+
+        String finalResult = result.toString().trim();
+
+        System.out.println("После удаления слов короче 3 символов: " + finalResult);
+    }
+
+    public static void task3() {
+
+        Employee[] employees = new Employee[] {
+                new Employee("Иванов Иван Иванович", 12500.50),
+                new Employee("Петров Петр Петрович", 9800.75),
+                new Employee("Сидоров Сидор Сидорович", 15300.00),
+                new Employee("Кузнецова Анна Сергеевна", 11200.25)
+        };
+
+        Report.generateReport(employees);
+    }
+
+    public static void task4() {
+
+        String input = "а11а а22а a333а а4а а5а а6а а7а а8а а9а";
+
+        System.out.println("Исходная строка: " + input);
+        System.out.println("Найденные строки:");
+
+        Pattern pattern = Pattern.compile("а[1-5]{2}а");
+        Matcher matcher = pattern.matcher(input);
+
+        while (matcher.find()) {
+            System.out.println(matcher.group());
+        }
+    }
+
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+        int taskNumber = 3;
 
-        System.out.print("Выберите задание (1 или 2) ");
-
-        int choice = sc.nextInt();
-
-        switch (choice) {
+        switch (taskNumber) {
             case 1:
-                task1(sc);
+                task1();
                 break;
             case 2:
-                task2(sc);
+                task2();
+                break;
+            case 3:
+                task3();
+                break;
+            case 4:
+                task4();
                 break;
             default:
-                System.out.println("Ошибка введите 1 или 2");
+                System.out.println("Неверный номер задания. Доступны: 1, 2, 3, 4");
         }
-
-        sc.close();
-    }
-
-    static void task1(Scanner sc) {
-
-        System.out.print("Введите размер массива ");
-        int n = sc.nextInt();
-
-        int[] arr = new int[n];
-
-        System.out.println("Введите элементы массива");
-        for (int i = 0; i < n; i++) {
-            arr[i] = sc.nextInt();
-        }
-
-        System.out.println("Исходный массив " + Arrays.toString(arr));
-
-        if (n > 0) {
-            int first = arr[0];
-            for (int i = 0; i < n - 1; i++) {
-                arr[i] = arr[i + 1];
-            }
-            arr[n - 1] = first;
-        }
-
-        System.out.println("Массив после сдвига влево " + Arrays.toString(arr));
-    }
-
-    static void task2(Scanner sc) {
-
-        System.out.print("Введите количество строк ");
-        int rows = sc.nextInt();
-        System.out.print("Введите количество столбцов ");
-        int cols = sc.nextInt();
-
-        int[][] matrix = new int[rows][cols];
-
-        System.out.println("Введите элементы матрицы");
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix[i].length; j++) {
-                matrix[i][j] = sc.nextInt();
-            }
-        }
-
-        System.out.println("Исходная матрица");
-        for (int i = 0; i < matrix.length; i++) {
-            System.out.println(Arrays.toString(matrix[i]));
-        }
-
-        int evenCount = 0, oddCount = 0;
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix[i].length; j++) {
-                if (matrix[i][j] % 2 == 0) evenCount++;
-                else oddCount++;
-            }
-        }
-
-        int[] evenArr = new int[evenCount];
-        int[] oddArr  = new int[oddCount];
-        int e = 0, o = 0;
-        int sum = 0;
-
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix[i].length; j++) {
-                if (i >= j) {
-                    sum += matrix[i][j];
-                }
-            }
-        }
-        System.out.println("Сумма элементов под гл " + sum);
-
-        System.out.println("Чётные элементы  " + Arrays.toString(evenArr));
-        System.out.println("Нечётные элементы " + Arrays.toString(oddArr));
     }
 }
