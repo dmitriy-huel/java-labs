@@ -1,95 +1,168 @@
 package org.example;
 
-class Singer {
+class Tool {
     private String name;
-    private String genre;
-    private int albums;
+    private double power;
+    private double weight;
 
-    private static int totalSingers = 0;
-    private static int totalAlbums = 0;
-
-    public Singer(String name, String genre, int albums) {
+    public Tool(String name, double power, double weight) {
         setName(name);
-        setGenre(genre);
-        setAlbums(albums);
-        totalSingers++;
-        totalAlbums += albums;
+        setPower(power);
+        setWeight(weight);
     }
 
     public String getName() { return name; }
-    public String getGenre() { return genre; }
-    public int getAlbums() { return albums; }
+    public double getPower() { return power; }
+    public double getWeight() { return weight; }
 
     public void setName(String name) {
         if (name == null || name.isEmpty()) {
-            System.out.println("имя не может быть пустым");
+            System.out.println("название не может быть пустым");
             return;
         }
         this.name = name;
     }
 
-    public void setGenre(String genre) {
-        if (genre == null || genre.isEmpty()) {
-            System.out.println("жанр не может быть пустым");
+    public void setPower(double power) {
+        if (power <= 0) {
+            System.out.println("мощность должна быть больше 0");
             return;
         }
-        this.genre = genre;
+        this.power = power;
     }
 
-    public void setAlbums(int albums) {
-        if (albums < 0) {
-            System.out.println("число альбомов не может быть отрицательным");
+    public void setWeight(double weight) {
+        if (weight <= 0) {
+            System.out.println("вес должен быть больше 0");
             return;
         }
-        this.albums = albums;
+        this.weight = weight;
     }
 
-    public static int getTotalSingers() { return totalSingers; }
-    public static int getTotalAlbums() { return totalAlbums; }
-
-    public static double getAverageAlbums() {
-        if (totalSingers == 0) return 0;
-        return (double) totalAlbums / totalSingers;
+    public void use() {
+        System.out.println("Инструмент используется");
     }
 
     public void displayInfo() {
-        System.out.println("Имя: " + getName() +
-                ", Жанр: " + getGenre() +
-                ", Альбомов: " + getAlbums());
+        System.out.println("Название: " + getName() +
+                ", Мощность: " + getPower() +
+                ", Вес: " + getWeight());
     }
 
     @Override
     public String toString() {
-        return  name + " " + genre + " " + albums;
+        return "ыname='" + name + "', power=" + power + ", weight=" + weight + "}";
+    }
+}
+
+class Drill extends Tool {
+    private int speed;
+
+    public Drill(String name, double power, double weight, int speed) {
+        super(name, power, weight);
+        setSpeed(speed);
+    }
+
+    public int getSpeed() { return speed; }
+
+    public void setSpeed(int speed) {
+        if (speed <= 0) {
+            System.out.println("скорость должна быть больше 0");
+            return;
+        }
+        this.speed = speed;
+    }
+
+    @Override
+    public void use() {
+        System.out.println("Сверлит отверстия");
+    }
+
+    public void changeDrillBit() {
+        System.out.println("Смена сверла выполнена");
+    }
+
+    @Override
+    public void displayInfo() {
+        super.displayInfo();
+        System.out.println("Скорость: " + getSpeed());
+    }
+
+    @Override
+    public String toString() {
+        return "name='" + getName() + "', power=" + getPower() +
+                ", weight=" + getWeight() + ", speed=" + speed + "}";
+    }
+}
+
+class Saw extends Tool {
+    private double bladeLength;
+
+    public Saw(String name, double power, double weight, double bladeLength) {
+        super(name, power, weight);
+        setBladeLength(bladeLength);
+    }
+
+    public double getBladeLength() { return bladeLength; }
+
+    public void setBladeLength(double bladeLength) {
+        if (bladeLength <= 0) {
+            System.out.println("длина лезвия должна быть больше 0");
+            return;
+        }
+        this.bladeLength = bladeLength;
+    }
+
+    @Override
+    public void use() {
+        System.out.println("Режет материалы");
+    }
+
+    public void sharpenBlade() {
+        System.out.println("Лезвие заточено");
+    }
+
+    @Override
+    public void displayInfo() {
+        super.displayInfo();
+        System.out.println("Длина лезвия: " + getBladeLength());
+    }
+
+    @Override
+    public String toString() {
+        return "Saw{name='" + getName() + "', power=" + getPower() +
+                ", weight=" + getWeight() + ", bladeLength=" + bladeLength + "}";
     }
 }
 
 public class App {
     public static void main(String[] args) {
-        Singer s1 = new Singer("Иван", "Рок", 5);
-        Singer s2 = new Singer("Мария", "Поп", 3);
-        Singer s3 = new Singer("Алексей", "Джаз", 7);
-        Singer s4 = new Singer("Ольга", "Классика", 2);
-        Singer s5 = new Singer("Пётр", "Рэп", 8);
+        Tool[] tools = {
+                new Drill("Bosch", 800, 2.5, 3000),
+                new Saw("Makita", 1200, 4.0, 25.0),
+                new Drill(" DeWalt", 950, 2.8, 2800),
+                new Saw("Hitachi", 1100, 3.5, 30.0),
+                new Drill("Metabo", 750, 2.2, 3200)
+        };
 
-        s1.displayInfo();
-        s2.displayInfo();
-        s3.displayInfo();
-        s4.displayInfo();
-        s5.displayInfo();
+        for (int i = 0; i < tools.length; i++) {
+            tools[i].displayInfo();
+            tools[i].use();
+            System.out.println();
+        }
+
+        for (int i = 0; i < tools.length; i++) {
+            if (tools[i] instanceof Drill) {
+                ((Drill) tools[i]).changeDrillBit();
+            } else if (tools[i] instanceof Saw) {
+                ((Saw) tools[i]).sharpenBlade();
+            }
+        }
 
         System.out.println();
 
-        System.out.println("Всего певцов: " + Singer.getTotalSingers());
-        System.out.println("Всего альбомов: " + Singer.getTotalAlbums());
-        System.out.println("Среднее число альбомов: " + Singer.getAverageAlbums());
-
-        System.out.println();
-
-        System.out.println(s1);
-        System.out.println(s2);
-        System.out.println(s3);
-        System.out.println(s4);
-        System.out.println(s5);
+        for (int i = 0; i < tools.length; i++) {
+            System.out.println(tools[i]);
+        }
     }
 }
