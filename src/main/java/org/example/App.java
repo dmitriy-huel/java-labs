@@ -1,117 +1,138 @@
 package org.example;
 
-interface Transportable {
-    void transport();
-    int getCapacity();
-}
+class Device {
+    private String model;
+    private int power;
+    private int year;
 
-interface Maintainable {
-    void maintain();
-    String getServiceDate();
-}
-
-class Truck implements Transportable, Maintainable {
-    private String brand;
-    private int capacity;
-    private String serviceDate;
-
-    public Truck(String brand, int capacity, String serviceDate) {
-        this.brand = brand;
-        this.capacity = capacity;
-        this.serviceDate = serviceDate;
+    public Device(String model, int power, int year) {
+        this.model = model;
+        this.power = power;
+        this.year = year;
     }
 
-    public String getBrand() { return brand; }
-    public String getServiceDate() { return serviceDate; }
+    public String getModel() { return model; }
+    public int getPower() { return power; }
+    public int getYear() { return year; }
 
-    @Override
-    public void transport() {
-        System.out.println("Грузовик " + brand + " перевозит грузы по дороге");
+    public void turnOn() {
+        System.out.println("Включаю");
     }
 
-    @Override
-    public int getCapacity() {
-        return capacity;
+    public void turnOn(int power) {
+        System.out.println("Включаю на мощность " + power);
     }
 
-    @Override
-    public void maintain() {
-        System.out.println("Грузовик " + brand + " проходит техобслуживание");
+    public void turnOn(String mode) {
+        System.out.println("Включаю в режиме " + mode);
+    }
+
+    public String getEnergyClass() {
+        return "Средний";
     }
 
     @Override
     public String toString() {
-        return "Truck{brand='" + brand + "', capacity=" + capacity +
-                ", serviceDate='" + serviceDate + "'}";
+        return "Device{model='" + model + "', power=" + power + ", year=" + year + "}";
     }
 }
 
-class Ship implements Transportable, Maintainable {
-    private String brand;
-    private int capacity;
-    private double tonnage;
+class TV extends Device {
+    private double screenSize;
 
-    public Ship(String brand, int capacity, double tonnage) {
-        this.brand = brand;
-        this.capacity = capacity;
-        this.tonnage = tonnage;
+    public TV(String model, int power, int year, double screenSize) {
+        super(model, power, year);
+        this.screenSize = screenSize;
     }
 
-    public String getBrand() { return brand; }
-    public double getTonnage() { return tonnage; }
+    public double getScreenSize() { return screenSize; }
 
     @Override
-    public void transport() {
-        System.out.println("Корабль " + brand + " перевозит грузы по воде");
+    public String getEnergyClass() {
+        return "Высокий";
     }
 
-    @Override
-    public int getCapacity() {
-        return capacity;
-    }
-
-    @Override
-    public void maintain() {
-        System.out.println("Корабль " + brand + " проходит докование");
-    }
-
-    @Override
-    public String getServiceDate() {
-        return "Последнее ТО: 2023-10-15";
+    public void turnOn(int power, String source) {
+        System.out.println("Включаю на мощность " + power + " с источником " + source);
     }
 
     @Override
     public String toString() {
-        return "Ship{brand='" + brand + "', capacity=" + capacity +
-                ", tonnage=" + tonnage + "}";
+        return "TV{model='" + getModel() + "', power=" + getPower() +
+                ", year=" + getYear() + ", screenSize=" + screenSize + "}";
+    }
+}
+
+class Fridge extends Device {
+    private double volume;
+
+    public Fridge(String model, int power, int year, double volume) {
+        super(model, power, year);
+        this.volume = volume;
+    }
+
+    public double getVolume() { return volume; }
+
+    @Override
+    public String getEnergyClass() {
+        return "Низкий";
+    }
+
+    public void turnOn(int power, boolean quickFreeze) {
+        System.out.println("Включаю на мощность " + power + ", быстрая заморозка: " + quickFreeze);
+    }
+
+    @Override
+    public String toString() {
+        return "Fridge{model='" + getModel() + "', power=" + getPower() +
+                ", year=" + getYear() + ", volume=" + volume + "}";
     }
 }
 
 public class App {
     public static void main(String[] args) {
-        Transportable[] transports = {
-                new Truck("Volvo", 20, "2024-01-10"),
-                new Truck("Scania", 25, "2024-02-15"),
-                new Truck("MAN", 18, "2023-12-01"),
-                new Ship("Evergreen", 1500, 5000.5),
-                new Ship("Maersk", 2000, 7500.0)
+        Device d = new Device("BaseDevice", 100, 2020);
+
+        System.out.println("Перегрузка в базовом классе:");
+        d.turnOn();
+        d.turnOn(150);
+        d.turnOn("Экономный");
+        System.out.println();
+
+        Device[] devices = {
+                new TV("Samsung", 120, 2022, 55.0),
+                new TV("LG", 100, 2021, 43.0),
+                new TV("Sony", 150, 2023, 65.0),
+                new Fridge("Bosch", 200, 2020, 350.0),
+                new Fridge("Atlant", 180, 2019, 400.0)
         };
 
-        for (int i = 0; i < transports.length; i++) {
-            transports[i].transport();
-            System.out.println("Грузоподъемность: " + transports[i].getCapacity() + " тонн");
-            System.out.println();
+        System.out.println("Переопределение методов:");
+        for (int i = 0; i < devices.length; i++) {
+            System.out.println("Модель: " + devices[i].getModel() +
+                    ", Класс энергоэффективности: " + devices[i].getEnergyClass());
         }
+        System.out.println();
+
+        System.out.println("Перегрузка в наследниках:");
+        TV tv = new TV("Panasonic", 110, 2023, 50.0);
+        tv.turnOn();
+        tv.turnOn(200);
+        tv.turnOn("Кино");
+        tv.turnOn(200, "HDMI");
 
         System.out.println();
 
-        for (int i = 0; i < transports.length; i++) {
-            if (transports[i] instanceof Maintainable) {
-                Maintainable m = (Maintainable) transports[i];
-                m.maintain();
-                System.out.println("Дата обслуживания: " + m.getServiceDate());
-                System.out.println();
-            }
-        }
+        Fridge fridge = new Fridge("Indesit", 190, 2022, 300.0);
+        fridge.turnOn();
+        fridge.turnOn(250);
+        fridge.turnOn("Турбо");
+        fridge.turnOn(250, true);
+
+        System.out.println();
+
+        System.out.println("Вывод объектов toString:");
+        System.out.println(tv);
+        System.out.println(fridge);
     }
 }
